@@ -20,3 +20,5 @@
 - reason = Hatannın sebebini açıklar.
 - strict = Parametre testlerinin daha sıkı kontrol edilmesini sağlar. Test edilmek isteden davarınışın gerçekten test ediliğinden emin olunmak için kullanılır. 
 - run = Çalıştırılmasını engeller. Özellikle yorumlayıcıyı çökerten xfailing testlerine kullanışlıdır.
+
+![Ekran Görüntüsü (18)](https://user-images.githubusercontent.com/112959117/228849658-0deacad0-a3e5-46e0-8ad0-e29cdb3af3f2.png)
