@@ -96,6 +96,30 @@ class Test_Saucedemo:
         self.waitForElementVisible((By.CLASS_NAME,"shopping_cart_link"))
         shoppingCart= self.driver.find_element(By.CLASS_NAME,"shopping_cart_link")
         shoppingCart.click()
+    def cartpageWithProducts(self):
+        self.standard_login()
+        self.addAllProducts()
+        self.waitForElementVisible((By.CLASS_NAME,"shopping_cart_link"))
+        shoppingCart= self.driver.find_element(By.CLASS_NAME,"shopping_cart_link")
+        shoppingCart.click()
+
+    def addAllProducts(self):
+        self.waitForElementVisible((By.ID, "add-to-cart-sauce-labs-bike-light"))
+        self.driver.find_element(By.ID, "add-to-cart-sauce-labs-bike-light").click()
+        self.driver.find_element(By.ID, "add-to-cart-sauce-labs-bolt-t-shirt").click()
+        self.driver.find_element(By.ID, "add-to-cart-sauce-labs-fleece-jacket").click()
+        self.driver.find_element(By.ID, "add-to-cart-sauce-labs-onesie").click()
+        self.driver.find_element(By.ID, "add-to-cart-test.allthethings()-t-shirt-(red)").click()
+        self.driver.find_element(By.ID, "add-to-cart-sauce-labs-backpack").click()
+    
+    def removeAllProducts(self):
+        self.waitForElementVisible((By.ID, "remove-test.allthethings()-t-shirt-(red)"))
+        self.driver.find_element(By.ID, "remove-sauce-labs-backpack").click()
+        self.driver.find_element(By.ID, "remove-sauce-labs-bike-light").click()
+        self.driver.find_element(By.ID, "remove-sauce-labs-bolt-t-shirt").click()
+        self.driver.find_element(By.ID, "remove-sauce-labs-fleece-jacket").click()
+        self.driver.find_element(By.ID, "remove-sauce-labs-onesie").click()
+        self.driver.find_element(By.ID, "remove-test.allthethings()-t-shirt-(red)").click()
 
     @pytest.mark.parametrize("username,password,errorMessageExcel", getData("invalid_login.xlsx","SauceDemoLoginErrors"))
     def test_error_login(self,username,password,errorMessageExcel):
@@ -197,5 +221,53 @@ class Test_Saucedemo:
         self.page_loaded()
         self.driver.save_screenshot(f"{self.folderPath}/ {self.testTime}-test-sauce-inventory-sidebar-link.png")
         assert self.driver.current_url== GC.inventoryURL
-    
+
+    def test_inventory_add(self):
+        #envanter kısmında ürün eklendiğinde kaldırma seçeneği gelecek
+        self.standard_login()
+        self.page_loaded()
+        self.addAllProducts()
+        self.driver.save_screenshot(f"{self.folderPath}/ {self.testTime}-test-sauce-inventory-addAllProducts-link.png")
+        self.driver.find_element(By.ID,"back-to-products").click()
+        assert self.driver.find_element(By.CSS_SELECTOR, "*[data-test=\"remove-sauce-labs-bolt-t-shirt\"]").text == "Remove"
+   
+    def test_inventory_remove_and_add_buttons(self):
+        self.standard_login()
+        self.page_loaded()
+        self.addAllProducts()
+        self.driver.save_screenshot(f"{self.folderPath}/ {self.testTime}-test-sauce-inventory-addAllProducts-link.png")
+        add = self.driver.find_element(By.CSS_SELECTOR, "*[data-test=\"remove-sauce-labs-bolt-t-shirt\"]").text == "Remove"
+        self.removeAllProducts()
+        self.waitForElementVisible((By.ID, "add-to-cart-sauce-labs-bike-light"))
+        self.driver.save_screenshot(f"{self.folderPath}/ {self.testTime}-test-sauce-inventory-removeAllProducts-link.png")
+        remove = self.driver.find_element(By.CSS_SELECTOR, "*[data-test=\"add-to-cart-sauce-labs-backpack\"]").text == "Add to cart"
+        assert (add & remove)
+    def test_cart_remove_buttons(self):
+        self.cartpageWithProducts()
+        self.page_loaded()
+        self.removeAllProducts()
+        self.driver.save_screenshot(f"{self.folderPath}/ {self.testTime}-test-sauce-cart-removeAllProducts-link.png")
+
+    def test_cartImage_number(self):
+        self.standard_login()
+        self.page_loaded()
+        self.addAllProducts()
+        self.waitForElementVisible((By.XPATH, "//div[@id=\'shopping_cart_container\']/a/span"))
+        self.driver.save_screenshot(f"{self.folderPath}/ {self.testTime}-test-sauce-cartImage-number-link.png")
+        assert self.driver.find_element(By.XPATH, "//div[@id=\'shopping_cart_container\']/a/span").text == "6"
+
+
+        
+        #username = self.driver.find_element_by_id("username").get_attribute("value")    "Store" 
+
+
+
+        
+        #assert self.driver.find_element_by_id("my_element").is_displayed()     "Verify"
+
+
+
+        
+
+
     
